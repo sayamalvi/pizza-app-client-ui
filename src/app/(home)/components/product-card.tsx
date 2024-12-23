@@ -9,14 +9,10 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import ToppingList from './topping-list';
+import { Button } from '@/components/ui/button';
+import { ShoppingCart } from 'lucide-react';
+import type { Product } from '@/lib/types';
 
-export type Product = {
-    id: number;
-    name: string;
-    description: string;
-    image: string;
-    price: number;
-};
 type PropTypes = { product: Product };
 
 const ProductCard = ({ product }: PropTypes) => {
@@ -32,7 +28,7 @@ const ProductCard = ({ product }: PropTypes) => {
             <CardFooter className="flex items-center justify-between mt-4">
                 <p>
                     <span>From </span>
-                    <span className="font-bold">₹{product.price}</span>
+                    <span className="font-bold">₹{100}</span>
                 </p>
 
                 <Dialog>
@@ -138,6 +134,13 @@ const ProductCard = ({ product }: PropTypes) => {
                                 </div>
 
                                 <ToppingList />
+                                <div className="flex items-center justify-between mt-12">
+                                    <span className="font-bold">₹400</span>
+                                    <Button>
+                                        <ShoppingCart size={20} />
+                                        <span className="ml-2">Add to cart</span>
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </DialogContent>

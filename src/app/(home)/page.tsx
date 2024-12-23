@@ -1,54 +1,36 @@
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
-import ProductCard, { Product } from "./components/product-card";
+import ProductCard from "./components/product-card";
+import type { Category, Product } from "@/lib/types";
 
-const products: Product[] = [
-  {
-    id: 1,
-    name: 'Pizza Margherita',
-    price: 12.99,
-    image: '/pizza-main.png',
-    description: 'Tomato sauce, mozzarella, fresh basil'
-  },
-  {
-    id: 2,
-    name: 'Pizza Pepperoni',
-    price: 14.99,
-    image: '/pizza-main.png',
-    description: 'Tomato sauce, mozzarella, pepperoni'
-  },
-  {
-    id: 3,
-    name: 'Pizza Quattro Stagioni',
-    price: 16.99,
-    image: '/pizza-main.png',
-    description: 'Tomato sauce, mozzarella, ham, artichokes, mushrooms, olives, oregano'
-  },
-  {
-    id: 4,
-    name: 'Pizza Quattro Formaggi',
-    price: 18.99,
-    image: '/pizza-main.png',
-    description: 'Tomato sauce, mozzarella, gorgonzola, fontina, parmesan'
-  },
-  {
-    id: 5,
-    name: 'Pizza Capricciosa',
-    price: 17.99,
-    image: '/pizza-main.png',
-    description: 'Tomato sauce, mozzarella, ham, artichokes, mushrooms'
-  },
-  {
-    id: 6,
-    name: 'Pizza Marinara',
-    price: 13.99,
-    image: '/pizza-main.png',
-    description: 'Tomato sauce, garlicc'
-  },
-]
+const Home = async () => {
+  // TODO: Do concurrent requests -> Promise.all
+  const categoryResponse = await fetch(`${process.env.BACKEND_URL}/api/catalog/categories`, {
+    next: {
+      revalidate: 3600,
+    },
+  })
+  if (!categoryResponse.ok) {
+    throw new Error('Failed to fetch categories')
+  }
+  const categories: Category[] = await categoryResponse.json()
 
-export default function Home() {
+  const productsResponse = await fetch(
+    `${process.env.BACKEND_URL}/api/catalog/products?tenantId=4`,
+    {
+      next: {
+        revalidate: 3600,
+
+      },
+    }
+  );
+
+  if (!productsResponse.ok) {
+    throw new Error("Failed to fetch products");
+  }
+  const { products }: { products: Product[] } = await productsResponse.json();
+
   return (
     <>
       <section className="bg-white p-[5rem]">
@@ -72,20 +54,39 @@ export default function Home() {
       </section>
       <section className="p-[5rem]">
         <div className="container py-12">
-          <Tabs defaultValue="pizza" className="">
+          <Tabs defaultValue={categories[0]._id} className="">
             <TabsList>
-              <TabsTrigger className="text-md" value="pizza">
-                Pizza
-              </TabsTrigger>
-              <TabsTrigger className="text-md" value="beverages">
-                Beverages
-              </TabsTrigger>
+              {categories.map((category) => {
+                return (
+                  <TabsTrigger
+                    key={category._id}
+                    value={category._id}
+                    className="text-md">
+                    {category.name}
+                  </TabsTrigger>
+                );
+              })}
             </TabsList>
+            {categories.map((category) => {
+              return (
+                <TabsContent key={category._id} value={category._id}>
+                  <div className="grid grid-cols-4 gap-6 mt-6">
+                    {products
+                      .filter(
+                        (product) => product.category._id === category._id
+                      )
+                      .map((product) => (
+                        <ProductCard product={product} key={product._id} />
+                      ))}
+                  </div>
+                </TabsContent>
+              );
+            })}
             <TabsContent value="pizza">
               <div className="grid grid-cols-4 gap-6 mt-6">
                 {products.map((product: Product) => {
                   return (
-                    <ProductCard key={product.id} product={product} />
+                    <ProductCard key={product._id} product={product} />
                   )
                 })}
               </div>
@@ -100,3 +101,5 @@ export default function Home() {
 
   );
 }
+
+export default Home
