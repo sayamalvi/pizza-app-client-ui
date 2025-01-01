@@ -3,7 +3,6 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import React from 'react';
 import type { Product } from '@/lib/types';
 import ProductModal from './product-modal';
-
 type PropTypes = { product: Product };
 
 const ProductCard = ({ product }: PropTypes) => {
@@ -21,7 +20,6 @@ const ProductCard = ({ product }: PropTypes) => {
                     <span>From </span>
                     <span className="font-bold">₹{100}</span>
                 </p>
-
                 <ProductModal product={product} />
             </CardFooter>
         </Card>
