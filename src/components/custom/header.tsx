@@ -1,9 +1,10 @@
 import React from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import Link from 'next/link'
-import { Phone, ShoppingBasket } from 'lucide-react'
+import { Phone } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Tenant } from '@/lib/types'
+import CartCounter from './cart-counter'
 
 const Header = async () => {
     const tenantsResponse = await fetch(`${process.env.BACKEND_URL}/api/auth/tenants`, {
@@ -17,7 +18,7 @@ const Header = async () => {
     }
 
     const restaurants: Tenant[] = await tenantsResponse.json();
-    
+
     return (
         <header className='bg-white'>
             <nav className='container p-5 flex items-center justify-between'>
@@ -46,14 +47,7 @@ const Header = async () => {
                         <li><Link className='hover:text-primary' href="/">Menu</Link ></li>
                         <li><Link className='hover:text-primary' href="/">Orders</Link ></li>
                     </ul>
-                    <div className='relative'>
-                        <Link href="/cart">
-                            <ShoppingBasket className='hover:text-primary' />
-                        </Link>
-                        <span className='absolute -top-4 -right-5 h-6 w-6 flex itemce justify-center rounded-full bg-orange-600 font-medium text-white'>
-                            3
-                        </span>
-                    </div>
+                    <CartCounter />
                     <div className='flex items-center ml-12'>
                         <Phone />
                         <span>+9999999999</span>
