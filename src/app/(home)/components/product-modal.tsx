@@ -9,12 +9,16 @@ import { Button } from '@/components/ui/button'
 import { ShoppingCart } from 'lucide-react'
 import { Product, Topping } from '@/lib/types'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useAppDispatch } from '@/lib/store/hooks'
+import { addToCart } from '@/lib/store/features/cart/slice'
 
 type ChosenConfig = {
     [key: string]: string
 }
 
 const ProductModal = ({ product }: { product: Product }) => {
+    const dispatch = useAppDispatch()
+
     const [chosenConfig, setChosenConfig] = useState<ChosenConfig>();
 
     const [selectedToppings, setSelectedToppings] = React.useState<Topping[]>([]);
@@ -31,8 +35,15 @@ const ProductModal = ({ product }: { product: Product }) => {
             setSelectedToppings((prev) => [...prev, topping]);
         })
     };
-    const handleAddToCart = () => {
-        console.log('Add to cart clicked')
+    const handleAddToCart = (product: Product) => {
+        const itemToAdd = {
+            product,
+            chosenConfiguration: {
+                priceConfiguration: chosenConfig!,
+                selectedToppings: selectedToppings
+            }
+        }
+        dispatch(addToCart(itemToAdd))
     }
     const handleRadioChange = (key: string, data: string) => {
         setChosenConfig((prev) => { return { ...prev, [key]: data } })
@@ -85,12 +96,12 @@ const ProductModal = ({ product }: { product: Product }) => {
                             );
                         })}
                         <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
-                            <ToppingList selectedToppings={selectedToppings} handleCheckBoxCheck={handleCheckBoxCheck}/>
+                            <ToppingList selectedToppings={selectedToppings} handleCheckBoxCheck={handleCheckBoxCheck} />
                         </Suspense>
 
                         <div className="flex items-center justify-between mt-12">
                             <span className="font-bold">₹400</span>
-                            <Button onClick={handleAddToCart}>
+                            <Button onClick={() => { handleAddToCart(product) }}>
                                 <ShoppingCart size={20} />
                                 <span className="ml-2">Add to cart</span>
                             </Button>
