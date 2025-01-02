@@ -3,11 +3,11 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import Image from 'next/image'
-import React, { Suspense, useState } from 'react'
+import React, { startTransition, Suspense, useState } from 'react'
 import ToppingList from './topping-list'
 import { Button } from '@/components/ui/button'
 import { ShoppingCart } from 'lucide-react'
-import { Product } from '@/lib/types'
+import { Product, Topping } from '@/lib/types'
 import { Skeleton } from '@/components/ui/skeleton'
 
 type ChosenConfig = {
@@ -17,6 +17,20 @@ type ChosenConfig = {
 const ProductModal = ({ product }: { product: Product }) => {
     const [chosenConfig, setChosenConfig] = useState<ChosenConfig>();
 
+    const [selectedToppings, setSelectedToppings] = React.useState<Topping[]>([]);
+
+
+    const handleCheckBoxCheck = (topping: Topping) => {
+        const isAlreadyExists = selectedToppings.some((element: Topping) => element.id === topping.id);
+        startTransition(() => {
+            if (isAlreadyExists) {
+                setSelectedToppings((prev) => prev.filter((elm: Topping) => elm.id !== topping.id));
+                return;
+            }
+
+            setSelectedToppings((prev) => [...prev, topping]);
+        })
+    };
     const handleAddToCart = () => {
         console.log('Add to cart clicked')
     }
@@ -24,6 +38,7 @@ const ProductModal = ({ product }: { product: Product }) => {
         setChosenConfig((prev) => { return { ...prev, [key]: data } })
         console.log(chosenConfig)
     }
+
     return (
         <Dialog>
             <DialogTrigger className="bg-orange-200 hover:bg-orange-300 text-orange-500 px-6 py-2 rounded-full shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150">
@@ -70,7 +85,7 @@ const ProductModal = ({ product }: { product: Product }) => {
                             );
                         })}
                         <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
-                            <ToppingList />
+                            <ToppingList selectedToppings={selectedToppings} handleCheckBoxCheck={handleCheckBoxCheck}/>
                         </Suspense>
 
                         <div className="flex items-center justify-between mt-12">
