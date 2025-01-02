@@ -1,10 +1,12 @@
 'use client';
-import React, { startTransition, useEffect } from 'react';
+import React, { startTransition, useEffect, useState } from 'react';
 import ToppingCard from './topping-card';
 import { Topping } from '@/lib/types';
 
 const ToppingList = () => {
-    const [toppings, setToppings] = React.useState<Topping[]>([])
+    const [toppings, setToppings] = useState<Topping[]>([])
+    const [selectedToppings, setSelectedToppings] = React.useState<Topping[]>([]);
+
     useEffect(() => {
         const fetchToppings = async () => {
             const toppingsResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/catalog/toppings?tenantId=4`);
@@ -14,7 +16,6 @@ const ToppingList = () => {
         fetchToppings()
     }, [])
 
-    const [selectedToppings, setSelectedToppings] = React.useState<Topping[]>([]);
 
     const handleCheckBoxCheck = (topping: Topping) => {
         const isAlreadyExists = selectedToppings.some((element: Topping) => element.id === topping.id);
