@@ -9,7 +9,6 @@ export interface CartItem {
     };
     selectedToppings: Topping[];
   };
-
 }
 
 export interface CartState {
@@ -25,19 +24,24 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action: PayloadAction<CartItem>) => {
-      return {
-        cartItems: [
-          ...state.cartItems,
-          {
-            product: action.payload.product,
-            chosenConfiguration: action.payload.chosenConfiguration,
-          },
-        ],
+      const newItem = {
+        product: action.payload.product,
+        chosenConfiguration: action.payload.chosenConfiguration,
       };
+      window.localStorage.setItem(
+        "cart",
+        JSON.stringify([...state.cartItems, newItem])
+      );
+      return {
+        cartItems: [...state.cartItems, newItem],
+      };
+    },
+    setInitialCartItems: (state, action: PayloadAction<CartItem[]>) => {
+      state.cartItems.push(...action.payload);
     },
   },
 });
 
-export const { addToCart } = cartSlice.actions;
+export const { addToCart, setInitialCartItems } = cartSlice.actions;
 
 export default cartSlice.reducer;

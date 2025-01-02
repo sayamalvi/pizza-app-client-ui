@@ -19,10 +19,14 @@ type ChosenConfig = {
 const ProductModal = ({ product }: { product: Product }) => {
     const dispatch = useAppDispatch()
 
-    const [chosenConfig, setChosenConfig] = useState<ChosenConfig>();
+    const defaultConfig = Object.entries(product.category.priceConfiguration).map(([key, value]) => {
+        return {
+            [key]: value.availableOptions[0]
+        }
+    }).reduce((acc, curr) => ({ ...acc, ...curr }), {})
 
+    const [chosenConfig, setChosenConfig] = useState<ChosenConfig>(defaultConfig);
     const [selectedToppings, setSelectedToppings] = React.useState<Topping[]>([]);
-
 
     const handleCheckBoxCheck = (topping: Topping) => {
         const isAlreadyExists = selectedToppings.some((element: Topping) => element.id === topping.id);
@@ -39,7 +43,7 @@ const ProductModal = ({ product }: { product: Product }) => {
         const itemToAdd = {
             product,
             chosenConfiguration: {
-                priceConfiguration: chosenConfig!,
+                priceConfiguration: chosenConfig,
                 selectedToppings: selectedToppings
             }
         }

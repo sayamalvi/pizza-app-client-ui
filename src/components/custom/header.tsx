@@ -4,7 +4,9 @@ import Link from 'next/link'
 import { Phone } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Tenant } from '@/lib/types'
-import CartCounter from './cart-counter'
+import dynamic from 'next/dynamic'
+
+const CartCounter = dynamic(() => import('@/components/custom/cart-counter'), { ssr: false })
 
 const Header = async () => {
     const tenantsResponse = await fetch(`${process.env.BACKEND_URL}/api/auth/tenants`, {
