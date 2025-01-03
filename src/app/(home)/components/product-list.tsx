@@ -27,7 +27,6 @@ const ProductList = async () => {
         throw new Error("Failed to fetch products");
     }
     const { products }: { products: Product[] } = await productsResponse.json();
-
     return (
         <section className="p-[5rem]">
             <div className="container py-12">
