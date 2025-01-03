@@ -9,8 +9,9 @@ import { Button } from '@/components/ui/button'
 import { ShoppingCart } from 'lucide-react'
 import { Product, Topping } from '@/lib/types'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useAppDispatch } from '@/lib/store/hooks'
-import { addToCart } from '@/lib/store/features/cart/slice'
+import { useAppDispatch, useAppSelector } from '@/lib/store/hooks'
+import { addToCart, CartItem } from '@/lib/store/features/cart/slice'
+import { hashItem } from '@/lib/utils'
 
 type ChosenConfig = {
     [key: string]: string
@@ -18,7 +19,8 @@ type ChosenConfig = {
 
 const ProductModal = ({ product }: { product: Product }) => {
     const dispatch = useAppDispatch()
-
+    const cartItems = useAppSelector((state) => state.cart.cartItems)
+    const [dialogOpen, setDialogOpen] = useState(false)
     const defaultConfig = Object.entries(product.category.priceConfiguration).map(([key, value]) => {
         return {
             [key]: value.availableOptions[0]
@@ -40,18 +42,23 @@ const ProductModal = ({ product }: { product: Product }) => {
         })
     };
     const handleAddToCart = (product: Product) => {
-        const itemToAdd = {
-            product,
+        const itemToAdd: CartItem = {
+            _id: product._id,
+            name: product.name,
+            image: product.image,
+            priceConfiguration: product.priceConfiguration,
             chosenConfiguration: {
                 priceConfiguration: chosenConfig,
                 selectedToppings: selectedToppings
-            }
+            },
+            qty: 1
         }
         dispatch(addToCart(itemToAdd))
+        setSelectedToppings([])
+        setDialogOpen(false)
     }
     const handleRadioChange = (key: string, data: string) => {
         setChosenConfig((prev) => { return { ...prev, [key]: data } })
-        console.log(chosenConfig)
     }
 
     const totalPrice = useMemo(() => {
@@ -63,8 +70,23 @@ const ProductModal = ({ product }: { product: Product }) => {
         return toppingsTotal + configPricing
     }, [chosenConfig, selectedToppings, product])
 
+    const alreadyAddedToCart = useMemo(() => {
+        const currentConfig = {
+            _id: product._id,
+            name: product.name,
+            image: product.image,
+            priceConfiguration: product.priceConfiguration,
+            chosenConfiguration: {
+                priceConfiguration: { ...chosenConfig },
+                selectedToppings: selectedToppings,
+            },
+            qty: 1,
+        }
+        const hash = hashItem(currentConfig)
+        return cartItems.some((item) => item.hash === hash)
+    }, [product, chosenConfig, selectedToppings, cartItems])
     return (
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger className="bg-orange-200 hover:bg-orange-300 text-orange-500 px-6 py-2 rounded-full shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150">
                 Choose
             </DialogTrigger>
@@ -116,9 +138,14 @@ const ProductModal = ({ product }: { product: Product }) => {
 
                         <div className="flex items-center justify-between mt-12">
                             <span className="font-bold">₹{totalPrice}</span>
-                            <Button onClick={() => { handleAddToCart(product) }}>
+                            <Button
+                                className={alreadyAddedToCart ? 'bg-gray-700' : 'bg-primary'}
+                                disabled={alreadyAddedToCart}
+                                onClick={() => handleAddToCart(product)}>
                                 <ShoppingCart size={20} />
-                                <span className="ml-2">Add to cart</span>
+                                <span className="ml-2">
+                                    {alreadyAddedToCart ? 'Already in cart' : 'Add to cart'}
+                                </span>
                             </Button>
                         </div>
                     </div>
