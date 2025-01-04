@@ -5,11 +5,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 const TenantSelect = ({ restaurants }: { restaurants: Tenant[] }) => {
     const router = useRouter()
+    const searchParams = useSearchParams()
     const handleTenantChange = (value: string) => {
         router.push(`?tenantId=${value}`)
     }
     return (
-        <Select onValueChange={handleTenantChange} defaultValue={useSearchParams().get('tenantId') ?? ''}>
+        <Select onValueChange={handleTenantChange} defaultValue={searchParams.get('tenantId') ?? ''}>
             <SelectTrigger className="w-[180px] focus:ring-0">
                 <SelectValue placeholder="Select Restaurant" />
             </SelectTrigger>
