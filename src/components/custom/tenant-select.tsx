@@ -7,7 +7,7 @@ const TenantSelect = ({ restaurants }: { restaurants: Tenant[] }) => {
     const router = useRouter()
     const searchParams = useSearchParams()
     const handleTenantChange = (value: string) => {
-        router.push(`?tenantId=${value}`)
+        router.push(`?tenant=${value}`)
     }
     return (
         <Select onValueChange={handleTenantChange} defaultValue={searchParams.get('tenantId') ?? ''}>
