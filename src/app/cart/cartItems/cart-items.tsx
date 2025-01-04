@@ -51,10 +51,12 @@ const CartItems = () => {
             ))}
             <div className="flex justify-between items-center">
                 <span className="font-bold text-xl">&#8377;{cartTotal}</span>
-                <Button>
-                    Checkout
-                    <ArrowRight size={16} className="ml-2" />
-                </Button>
+                <Link href={'/checkout'}>
+                    <Button>
+                        Checkout
+                        <ArrowRight size={16} className="ml-2" />
+                    </Button>
+                </Link>
             </div>
         </div>
     );
