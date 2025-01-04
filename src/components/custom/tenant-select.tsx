@@ -1,5 +1,5 @@
 'use client'
-import { Tenant } from "@/lib/types";
+import { SEARCH_PARAMS, Tenant } from "@/lib/types";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -7,7 +7,7 @@ const TenantSelect = ({ restaurants }: { restaurants: Tenant[] }) => {
     const router = useRouter()
     const searchParams = useSearchParams()
     const handleTenantChange = (value: string) => {
-        router.push(`?tenant=${value}`)
+        router.push(`?${SEARCH_PARAMS.TENANT_ID}=${value}`)
     }
     return (
         <Select onValueChange={handleTenantChange} defaultValue={searchParams.get('tenantId') ?? ''}>

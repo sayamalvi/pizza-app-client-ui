@@ -57,3 +57,7 @@ export type Topping = {
   image: string;
   isAvailable: boolean;
 };
+
+export enum SEARCH_PARAMS {
+  TENANT_ID = "tenantId",
+}
