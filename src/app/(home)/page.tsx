@@ -3,7 +3,7 @@ import Image from "next/image";
 import ProductList from "./components/product-list";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-const Home = () => {
+const Home = ({ searchParams }: { searchParams: { tenantId: string } }) => {
   return (
     <>
       <section className="bg-white p-[5rem]">
@@ -26,7 +26,7 @@ const Home = () => {
         </div>
       </section>
       <Suspense fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}>
-        <ProductList />
+        <ProductList searchParams={searchParams} />
       </Suspense>
     </>
   );
