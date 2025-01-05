@@ -36,7 +36,7 @@ const Login = () => {
     const [state, formAction] = useFormState(login, initialState);
     const router = useRouter()
     if (state.type === 'success') {
-        router.replace('/')
+        router.push('/')
     }
     return (
         <div className="">

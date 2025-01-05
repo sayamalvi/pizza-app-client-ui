@@ -6,7 +6,7 @@ const getSelf = async (): Promise<Session | null> => {
     `${process.env.BACKEND_URL}/api/auth/auth/self`,
     {
       headers: {
-        Authorization: `Bearer ${cookies().get("accessToken")}`,
+        Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
       },
     }
   );

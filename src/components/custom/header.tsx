@@ -6,12 +6,12 @@ import { Tenant } from '@/lib/types'
 import dynamic from 'next/dynamic'
 import TenantSelect from './tenant-select'
 import { getSession } from '@/lib/session'
+import Logout from './logout'
 
 const CartCounter = dynamic(() => import('@/components/custom/cart-counter'), { ssr: false })
 
 const Header = async () => {
     const session = await getSession()
-    console.log(session)
     const tenantsResponse = await fetch(`${process.env.BACKEND_URL}/api/auth/tenants`, {
         next: {
             revalidate: 3600,
@@ -46,7 +46,13 @@ const Header = async () => {
                         <Phone />
                         <span>+9999999999</span>
                     </div>
-                    <Button>{session ? 'Logout' : 'Login'}</Button>
+                    {session ? (
+                        <Logout />
+                    ) : (
+                        <Button asChild>
+                            <Link href='/login'>Login</Link>
+                        </Button>
+                    )}
                 </div>
             </nav>
         </header>
