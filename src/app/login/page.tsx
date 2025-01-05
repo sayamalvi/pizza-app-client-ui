@@ -8,6 +8,7 @@ import React from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import login from '@/lib/actions/login';
 import { LoaderCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const SubmitButton = () => {
     const { pending } = useFormStatus();
@@ -26,17 +27,23 @@ const SubmitButton = () => {
     );
 };
 
-const initialState: unknown = undefined
+const initialState = {
+    type: '',
+    message: ''
+}
 
 const Login = () => {
     const [state, formAction] = useFormState(login, initialState);
-
+    const router = useRouter()
+    if (state.type === 'success') {
+        router.replace('/')
+    }
     return (
         <div className="">
             <div className="flex items-center justify-center py-12">
                 <div className="mx-auto grid w-[350px] gap-6">
                     <div className="grid gap-2 text-center">
-                        {/* <p aria-live="polite"></p> */}
+                        <p aria-live="polite" className={`${state.type === 'error' ? 'text-red-500' : 'text-green-500'}`}>{state.message}</p>
                         <h1 className="text-3xl font-bold">Login</h1>
                         <p className="text-balance text-muted-foreground">
                             Enter your email below to login to your account
@@ -65,8 +72,7 @@ const Login = () => {
                                 </div>
                                 <Input id="password" name="password" type="password" required />
                             </div>
-                            {/* <SubmitButton state={state} /> */}
-                            <Button>Login</Button>
+                            <SubmitButton />
                         </div>
                     </form>
                     <div className="mt-4 text-center text-sm">
@@ -87,7 +93,7 @@ const Login = () => {
                     className="h-screen"
                 />
             </div> */}
-        </div>
+        </div >
     );
 };
 
