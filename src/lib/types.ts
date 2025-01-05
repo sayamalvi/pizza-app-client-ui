@@ -61,3 +61,14 @@ export type Topping = {
 export enum SEARCH_PARAMS {
   TENANT_ID = "tenantId",
 }
+export interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: "admin" | "customer" | "manager";
+}
+
+export interface Session {
+  user: User;
+}
