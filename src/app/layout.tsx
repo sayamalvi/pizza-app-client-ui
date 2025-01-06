@@ -6,6 +6,7 @@ import Header from "@/components/custom/header";
 import StoreProvider from "./StoreProvider";
 import { Toaster } from "@/components/ui/toaster";
 import TokenRefresher from "@/components/custom/token-refresher";
+import QueryProvider from "./QueryProvider";
 
 const manrope = Manrope({ subsets: ['latin'], variable: '--font-manrope' });
 
@@ -26,13 +27,15 @@ export default function RootLayout({
         <body
           className={cn('min-h-screen bg-background font-manrope antialiased', manrope.variable)}
         >
-          <TokenRefresher>
-            <main>
-              <Header />
-              {children}
-            </main>
-          </TokenRefresher>
-          <Toaster />
+          <QueryProvider>
+            <TokenRefresher>
+              <main>
+                <Header />
+                {children}
+              </main>
+            </TokenRefresher>
+            <Toaster />
+          </QueryProvider>
         </body>
       </StoreProvider>
     </html>
