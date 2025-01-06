@@ -8,7 +8,7 @@ import React from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import login from '@/lib/actions/login';
 import { LoaderCircle } from 'lucide-react';
-import { redirect } from 'next/navigation';
+import { redirect, useSearchParams } from 'next/navigation';
 
 const SubmitButton = () => {
     const { pending } = useFormStatus();
@@ -34,8 +34,10 @@ const initialState = {
 
 const Login = () => {
     const [state, formAction] = useFormState(login, initialState);
+    const searchParams = useSearchParams()
+    const redirectTo = searchParams.get('redirectTo')
     if (state.type === 'success') {
-        redirect('/')
+        redirect(redirectTo ?? '/')
     }
     return (
         <div className="">

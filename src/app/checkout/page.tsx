@@ -14,13 +14,17 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { getSession } from '@/lib/session';
+import { SEARCH_PARAMS } from '@/lib/types';
 import { Coins, CreditCard, Plus } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
-export default async function Checkout() {
+export default async function Checkout({ searchParams }: { searchParams: SEARCH_PARAMS }) {
     const session = await getSession()
+    const sParams = new URLSearchParams(searchParams)
+    const currentRoute = sParams.toString()
+    sParams.append('redirectTo', `/checkout?${currentRoute}`)
     if (!session) {
-        redirect('/login')
+        redirect(`/login?${sParams.toString()}`)
     }
     return (
         <div className="flex container gap-6 mt-16">
