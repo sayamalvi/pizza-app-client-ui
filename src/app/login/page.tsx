@@ -8,7 +8,7 @@ import React from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import login from '@/lib/actions/login';
 import { LoaderCircle } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
 const SubmitButton = () => {
     const { pending } = useFormStatus();
@@ -34,9 +34,8 @@ const initialState = {
 
 const Login = () => {
     const [state, formAction] = useFormState(login, initialState);
-    const router = useRouter()
     if (state.type === 'success') {
-        router.push('/')
+        redirect('/')
     }
     return (
         <div className="">
