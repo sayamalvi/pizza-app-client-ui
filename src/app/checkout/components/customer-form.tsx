@@ -14,9 +14,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
+import { getCustomer } from '@/lib/http/api';
+import { Customer } from '@/lib/types';
+import { useQuery } from '@tanstack/react-query';
 import { Coins, CreditCard, Plus } from 'lucide-react';
 
 const CustomerForm = () => {
+    const { data: customer, isLoading } = useQuery<Customer>({
+        queryKey: ["customer"],
+        queryFn: getCustomer,
+    });
+    if (!customer || isLoading) return null
     return (
         <div className="flex container gap-6 mt-16">
             <Card className="w-3/5 border-none">
@@ -27,15 +35,15 @@ const CustomerForm = () => {
                     <div className="grid gap-6">
                         <div className="grid gap-3">
                             <Label htmlFor="fname">First Name</Label>
-                            <Input id="fname" type="text" className="w-full" defaultValue="" />
+                            <Input id="fname" type="text" className="w-full" value={customer?.firstName} defaultValue={customer?.firstName} disabled />
                         </div>
                         <div className="grid gap-3">
                             <Label htmlFor="lname">Last Name</Label>
-                            <Input id="lname" type="text" className="w-full" defaultValue="" />
+                            <Input id="lname" type="text" className="w-full" value={customer?.lastName} defaultValue={customer?.lastName} disabled />
                         </div>
                         <div className="grid gap-3">
                             <Label htmlFor="email">Email</Label>
-                            <Input id="email" type="text" className="w-full" defaultValue="" />
+                            <Input id="email" type="text" className="w-full" value={customer?.email} defaultValue={customer?.email} disabled />
                         </div>
                         <div className="grid gap-3">
                             <div>
