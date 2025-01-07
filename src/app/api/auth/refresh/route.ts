@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
-import cookie from "cookie";
+import * as cookie from "cookie";
+
 export async function POST() {
   const response = await fetch(
     `${process.env.BACKEND_URL}/api/auth/auth/refresh`,

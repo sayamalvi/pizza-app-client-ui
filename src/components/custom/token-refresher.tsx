@@ -53,9 +53,11 @@ const TokenRefresher = ({ children }: { children: React.ReactNode }) => {
         startRefresh()
 
         return () => {
-            clearTimeout(timeoutId.current)
+            if (timeoutId.current) {
+                clearTimeout(timeoutId.current)
+            }
         }
-    }, [timeoutId, startRefresh])
+    }, [startRefresh, timeoutId])
 
     return (
         <div>{children}</div>
