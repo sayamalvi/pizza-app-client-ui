@@ -43,8 +43,11 @@ const AddAddress = ({ customerId }: { customerId: string }) => {
             setDialogOpen(false)
         }
     })
-    const handleAddAddress = (data: z.infer<typeof addAddressSchema>) => {
-        addAddressMutation(data.address)
+    const handleAddAddress = (e: React.FormEvent<HTMLFormElement>) => {
+        e.stopPropagation()
+        return addAddressForm.handleSubmit((data: z.infer<typeof addAddressSchema>) => {
+            addAddressMutation(data.address)
+        })(e)
     }
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -56,7 +59,7 @@ const AddAddress = ({ customerId }: { customerId: string }) => {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <Form  {...addAddressForm}>
-                    <form onSubmit={addAddressForm.handleSubmit(handleAddAddress)}>
+                    <form onSubmit={handleAddAddress}>
                         <DialogHeader>
                             <DialogTitle>Add Address</DialogTitle>
                             <DialogDescription>
