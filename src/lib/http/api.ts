@@ -18,3 +18,9 @@ export const getCustomer = async (): Promise<Customer> => {
   );
   return response.data.customer;
 };
+
+export const addAddress = async (customerId: string, address: string) => {
+  return await api.patch(`${ORDER_SERVICE}/customer/addresses/${customerId}`, {
+    address,
+  });
+};
