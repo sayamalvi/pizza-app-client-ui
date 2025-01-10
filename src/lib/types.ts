@@ -78,7 +78,7 @@ export interface Address {
   isDefault: boolean;
 }
 export interface Customer {
-  _id:string
+  _id: string;
   userId: string;
   firstName: string;
   lastName: string;
@@ -86,4 +86,26 @@ export interface Customer {
   addresses: Address[];
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface Coupon {
+  code: string;
+}
+
+export interface VerifyCouponResponse {
+  valid: boolean;
+  discount: number;
+}
+
+interface APIErrorDetail {
+  ref: string;
+  type: string;
+  msg: string;
+  path: string;
+  location: string;
+  stack: string;
+}
+
+export interface APIErrorResponse {
+  errors: APIErrorDetail[];
 }

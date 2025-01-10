@@ -37,7 +37,6 @@
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "^5.62.16",
-    "@types/axios": "^0.9.36",
     "@types/cookie": "^0.6.0",
     "@types/crypto-js": "^4.2.2",
     "@types/jsonwebtoken": "^9.0.7",
